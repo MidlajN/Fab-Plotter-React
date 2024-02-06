@@ -1,0 +1,48 @@
+/* Navbar */
+.navbar h3 {
+    font-size: 20px;
+    font-weight: 500;
+    color: gray;
+    text-transform: uppercase;
+    letter-spacing: 0.25rem;
+  }
+  
+
+/* Svg Drag & Drop Section */
+.svgDiv {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #ffffff;
+    /* opacity: 0.3; */
+    background-image: radial-gradient(#444df756 1.1500000000000001px, #eef4f98e 1.1500000000000001px);
+    background-size: 23px 23px;
+    box-shadow: inset 0px 0px 7px 5px #0000001f;
+    border-radius: 8px;
+    margin-inline: 1rem 3rem;
+    transition: 0.5s ease;
+    overflow: hidden;
+  }
+  
+  #drop {
+    padding: 40px 20px;
+    background-color: #ffffffa8;
+    box-shadow: rgb(173 207 221 / 0%) 0px 1px 1px, rgb(178 215 223 / 7%) 0px 2px 2px, rgba(0, 0, 0, 0.07) 0px 4px 4px, rgb(201 223 233 / 7%) 0px 8px 8px, rgb(161 188 255 / 64%) 0px 16px 16px;
+    transition: 0.5s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: black;
+  }
+  #result {
+    opacity: 0;
+    transition: 0.5s ease;
+    /* width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center; */
+  }
+  #zoomContainer {
+    transition: 0.3s ease;
+  }
