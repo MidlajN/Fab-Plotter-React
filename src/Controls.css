@@ -1,0 +1,145 @@
+/* ---------- Control Button Group ---------- */
+
+/* Control Button Group */
+.controlBtnGroup .connect {
+    background-color: #3a9960;
+    width: 100%;
+    padding: 6px 10px;
+    color: white;
+    border-radius: 1vh;
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    transition: 0.5s ease;
+}
+.fa-plug-circle-bolt, .fa-plug-circle-xmark {
+    transition: 0.5s ease;
+}
+.controlBtnGroup .connect:hover {
+box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+}
+.controlBtnGroup .connect:hover .fa-plug-circle-bolt{
+    transform: rotate(45deg) scale(0.9) ;
+    text-shadow: 0 0px 4px #0aff17bf;
+}
+.controlBtnGroup .connect:hover .fa-plug-circle-xmark {
+    transform: rotate(45deg) scale(0.9) ;
+    text-shadow: 0 0px 4px #f1b3b3bf;
+}
+
+.controlBtnGroup .originBtn {
+    background-color: #6f0000;
+    padding: 5px;
+    width: 100%;
+    border-radius: 10px;
+    color: white;
+    font-weight: 500;
+    transition: 0.5s ease;
+}
+.controlBtnGroup .originBtn:hover {
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+}
+
+
+/* Control Input Group */
+.controlInputGroup label {
+    text-align: end;
+    width: 80%;
+    font-size: .8rem;
+    color: gray;
+}
+.controlInputGroup input {
+    width: 100%;
+    background-color: #e5e5f796;
+    border: 0;
+    color: gray;
+    box-shadow: inset 0px 0px 10px 1px #00000007;
+    border-radius: 5px;
+    font-size: 10px;
+    margin-left: 10px;
+    padding-block: .4rem;
+    transition: box-shadow 0.5s ease;
+    outline: none; /* Remove default focus outline */
+    text-align: center;
+}
+
+.generateGcode {
+    background-color: #3A5A99;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 2rem;
+    transition: 0.5s ease;
+    font-size: 12px;
+    min-width: 180px;
+}
+.generateGcode:hover {
+    letter-spacing: 1px;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+}
+.plot {
+    text-decoration: none;
+    padding-left: 12px;
+    display: inline-block;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+    color: green;
+    transition: background-color 0.5s linear;
+}
+.plot .fa-print {
+    color: white;
+    display: inline-block;
+    background-color:green; /* Background color of the icon */
+    border-radius: 50%; /* Make the background circular */ /* Adjust padding as needed */
+    line-height: 1;
+    padding: 8px;
+    transition: background-color 0.5s linear;
+}
+
+
+/* Directional Button Group */
+.button-group {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    grid-gap: 10px;
+    width: -moz-fit-content;
+    width: fit-content;
+    height: -moz-fit-content;
+    height: fit-content;
+    margin: auto;
+} 
+.direction-button,
+.center-button {
+    padding: 20px;
+    background-color: lightblue;
+    border: none;
+    cursor: pointer;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+} 
+.up {
+    grid-column: 2;
+    grid-row: 1;
+} 
+.down {
+    grid-column: 2;
+    grid-row: 3;
+} 
+.left {
+    grid-column: 1;
+    grid-row: 2;
+} 
+.right {
+    grid-column: 3;
+    grid-row: 2;
+}
+.center-button {
+    grid-column: 2;
+    grid-row: 2;
+    background-color: lightgreen;
+}
+
+/* ---------- End of Control Button Group ---------- */
