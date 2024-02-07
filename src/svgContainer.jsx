@@ -1,5 +1,5 @@
 
-function Display() {
+function SvgContainer() {
     return (
         <>
         <div id='dropArea' className="lg:w-3/5 md:w-full sm:w-full h-full p-5 svgDiv" >
@@ -15,4 +15,4 @@ function Display() {
         </>
     )
 }
-export default Display
+export default SvgContainer

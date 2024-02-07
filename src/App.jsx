@@ -3,8 +3,8 @@
 // import viteLogo from '/vite.svg'
 import './App.css'
 import Controls from './Controls'
-import Display from './Display'
 import './index.css'
+import SvgContainer from './svgContainer'
 // 
 function App() {
 
@@ -20,7 +20,7 @@ function App() {
 
       {/* ---------- Main Section ---------- */}
       <div className="flex items-center m-10 sm:flex-col md:flex-col lg:flex-row h-3/4 max-[646px]:flex-col">
-        <Display />
+        <SvgContainer />
         <Controls />
       </div>
     </>

@@ -60,6 +60,36 @@ function Controls() {
                         </div>
                     </div>
                 </div>
+                <div className='textareaGroup w-full lg:h-3/5'>
+                    <GcodeSection />
+                </div>
+            </div>
+        </>
+    )
+}
+
+
+function GcodeSection() {
+    return (
+        <>
+            <div className="flex gap-6 h-full">
+                <div className='w-full'>
+                    <div className="textArea h-full">
+                        <div className="flex justify-between items-center p-6 h-[10%]">
+                            <h1>G - Code</h1>
+                            <button id="downloadGcode"><i class="fa-solid fa-download fa-lg" style={{color: '#3A5A99'}}></i></button>
+                        </div>
+                        <textarea name="gcode" className='h-[90%]' id="gcode"></textarea>
+                    </div>
+                </div>
+                <div className='w-full'>
+                    <div className="responseArea h-full">
+                        <div className='flex items-center p-6 h-[10%]'>
+                            <h1>Response</h1>
+                        </div>
+                        <textarea name="responseArea" className='h-[90%] w-full' id="responseArea" disabled></textarea>
+                    </div>
+                </div>
             </div>
         </>
     )

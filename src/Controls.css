@@ -141,5 +141,51 @@ box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px
     grid-row: 2;
     background-color: lightgreen;
 }
-
 /* ---------- End of Control Button Group ---------- */
+
+
+
+/* ---------- Gcode and Response Section CSS --------- */
+
+/* G-Code Section */
+.textArea {
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    border-radius: 1rem;
+    overflow: hidden;
+    position: relative;
+}
+
+.textArea textarea {
+    width: 100%;
+    background-color: #e5e5f796;
+    border: 0;
+    color: gray;
+    box-shadow: inset 0px 0px 10px 1px #00000007;
+    border-radius: 5px;
+    padding: 1rem;
+    transition: box-shadow 0.5s ease;
+    outline: none; /* Remove default focus outline */
+}
+.textArea textarea:focus {
+    box-shadow: rgba(240, 46, 170, 0.4) 0px 5px, rgba(240, 46, 170, 0.3) 0px 10px, rgba(240, 46, 170, 0.2) 0px 15px, rgba(240, 46, 170, 0.1) 0px 20px, rgba(240, 46, 170, 0.05) 0px 25px;
+}
+
+/* Response Section */
+.responseArea {
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    border-radius: 1rem;
+    overflow: hidden;
+    position: relative;
+}
+.responseArea div {
+    background-color: black;
+    color: white;
+}
+.responseArea textarea {
+    margin-top: .1rem;
+    background-color: black;
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+    transition: box-shadow 0.5s ease;
+}
+
