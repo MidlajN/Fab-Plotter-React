@@ -8,7 +8,7 @@ function Controls() {
     };
     return (
         <>
-            <div className="flex flex-wrap md:items-center lg:items-start md:w-full sm:w-full lg:w-2/5 h-full">
+            <div className="flex flex-wrap justify-between md:items-center lg:items-start md:w-full sm:w-full lg:w-2/5 h-full">
                 <div className="w-full p-3">
                     <div className="flex items-center lg:h-1/3 max-[646px]:h-full max-[646px]:flex-col">
                         <div className="flex gap-5 p-3 flex-wrap w-3/5 max-[646px]:w-full">
@@ -40,23 +40,7 @@ function Controls() {
                         </div>
 
                         <div className="w-2/5">
-                            <div className="button-group">
-                                <button className="direction-button up" id="dirUp" data-command="G0 Y5">
-                                    <i className="fa-solid fa-circle-chevron-up"></i>
-                                </button>
-                                <button className="direction-button left" id="dirLeft" data-command="G0 X-5">
-                                    <i className="fa-solid fa-circle-chevron-left"></i>
-                                </button>
-                                <button className="center-button" data-command="M03 S123">
-                                    <i className="fa-brands fa-centercode"></i>
-                                </button>
-                                <button className="direction-button right" id="dirRight" data-command="G0 X5">
-                                    <i className="fa-solid fa-circle-chevron-right"></i>
-                                </button>
-                                <button className="direction-button down" id="dirDown" data-command="G0 Y-5">
-                                    <i className="fa-solid fa-circle-chevron-down"></i>
-                                </button>
-                            </div>
+                            <DirectionButtons />
                         </div>
                     </div>
                 </div>
@@ -77,7 +61,7 @@ function GcodeSection() {
                     <div className="textArea h-full">
                         <div className="flex justify-between items-center p-6 h-[10%]">
                             <h1>G - Code</h1>
-                            <button id="downloadGcode"><i class="fa-solid fa-download fa-lg" style={{color: '#3A5A99'}}></i></button>
+                            <button id="downloadGcode"><i className="fa-solid fa-download fa-lg" style={{color: '#3A5A99'}}></i></button>
                         </div>
                         <textarea name="gcode" className='h-[90%]' id="gcode"></textarea>
                     </div>
@@ -93,6 +77,31 @@ function GcodeSection() {
             </div>
         </>
     )
+}
+
+function DirectionButtons() {
+    return (
+        <>
+            <div className="button-group">
+                <button className="direction-button up" id="dirUp" data-command="G0 Y5">
+                    <i className="fa-solid fa-circle-chevron-up"></i>
+                </button>
+                <button className="direction-button left" id="dirLeft" data-command="G0 X-5">
+                    <i className="fa-solid fa-circle-chevron-left"></i>
+                </button>
+                <button className="center-button" data-command="M03 S123">
+                    <i className="fa-brands fa-centercode"></i>
+                </button>
+                <button className="direction-button right" id="dirRight" data-command="G0 X5">
+                    <i className="fa-solid fa-circle-chevron-right"></i>
+                </button>
+                <button className="direction-button down" id="dirDown" data-command="G0 Y-5">
+                    <i className="fa-solid fa-circle-chevron-down"></i>
+                </button>
+            </div>
+        </>
+    )
+    
 }
 
 export default Controls
