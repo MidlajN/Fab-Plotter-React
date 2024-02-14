@@ -1,37 +1,29 @@
+import { useState, useEffect } from 'react';
 import './Controls.css'
 
 function Controls() {
-    const handleInputChange = (event) => {
-        if (event.target.value > event.target.maxLength) {
-            event.target.value = event.target.value.slice(0, event.target.maxLength);
-        }
-    };
+    const [reader, setReader] = useState(null)
+    const [writer, setWriter] = useState(null)
+    const [port, setPort] = useState(null)
+
+    const [configuration, setConfiguration] = useState({ feedRate:1400, seekRate:1100, zOffset:4 })
+
     return (
         <>
             <div className="flex flex-wrap justify-between md:items-center lg:items-start md:w-full sm:w-full lg:w-2/5 h-full">
                 <div className="w-full p-3">
                     <div className="flex items-center lg:h-1/3 max-[646px]:h-full max-[646px]:flex-col">
                         <div className="flex gap-5 p-3 flex-wrap w-3/5 max-[646px]:w-full">
-                            <div className="flex gap-3 w-full items-center justify-center controlBtnGroup">
-                                <button className="connect" id="connect">Connect <i className="fa-solid fa-plug-circle-bolt"></i></button>
-                                <button id="disconnect" className="connect" style={{display:'none', marginLeft:'auto', transition:'0.5s ease', backgroundColor:'#9d1818'}}>Disconnect <i className="fa-solid fa-plug-circle-xmark" style={{color: "white"}}></i></button>
-                                <button className='originBtn' data-command="G10 P0 L20 X0Y0Z0">Set Origin</button>
-                            </div>
+                            <SerialButtons 
+                                port={port} setPort={setPort}
+                                reader={reader} setReader={setReader}
+                                writer={writer} setWriter={setWriter}
+                            />
 
-                            <div className="flex controlInputGroup">
-                                <div className="flex items-center justify-between">
-                                    <label htmlFor="feedRate">feedRate</label>
-                                    <input id="feedRate" type="number" max="9999" maxLength="4" placeholder="1100" disabled onInput={handleInputChange}/>
-                                </div>
-                                <div className="flex items-center justify-between">
-                                    <label htmlFor="feedRate">seekRate</label>
-                                    <input id="seekRate" type="number" max="9999" maxLength="4" placeholder="1400" disabled onInput={handleInputChange}/>
-                                </div>
-                                <div className="flex items-center justify-between">
-                                    <label htmlFor="feedRate">zOffset</label>
-                                    <input id="zOffset" type="number" max="9999" maxLength="4" placeholder="4" disabled onInput={handleInputChange}/>
-                                </div>
-                            </div>
+                            <PlotterConfiguration 
+                                configuration={configuration}
+                                setConfiguration={setConfiguration}
+                            />
 
                             <div className="flex justify-between items-center w-full">
                                 <button className="generateGcode" id="generateGcode"><i className="fa-solid fa-gears"></i> Generate G-Code</button>  
@@ -46,6 +38,111 @@ function Controls() {
                 </div>
                 <div className='textareaGroup w-full lg:h-3/5'>
                     <GcodeSection />
+                </div>
+            </div>
+        </>
+    )
+}
+
+function SerialButtons({ port, setPort, reader, setReader, writer, setWriter }) {
+    const [isToggled, setIsToggled] = useState(true)
+    const [receivedText, setRecievedText] = useState(null)
+    const [portOpened, setPortOpened] = useState(false)
+
+    const connectSerial = async () => {
+        try {
+            const newPort = await navigator.serial.requestPort();
+            await newPort.open({ baudRate : 9600 });
+            console.log('Port Opened Successfully');
+            setPort(newPort);
+            setWriter(newPort.writable.getWriter());
+            setReader(newPort.readable.getReader());
+            setPortOpened(true)
+        } catch (error) {
+            console.error('Error While Connecting ::', error);
+        }
+    }
+
+
+    const setOrigin = async () => {
+        try {
+            if (!writer) return;
+
+            const dataToSend = isToggled ? '1' : '0';
+            setIsToggled(!isToggled)
+            // const dataToSend = 'G21\n'
+            await writer.write(new TextEncoder().encode(dataToSend))
+
+            const response = await reader.read();
+            setRecievedText(new TextDecoder().decode(response.value))
+
+            console.log(receivedText)
+
+        } catch (error) {
+            console.error('Error Sending Data ::', error);
+        }
+    }
+
+
+    const closeSerial = async () => {
+        if (port) {
+            await reader.releaseLock();
+            await writer.releaseLock();
+            await port.close();
+            console.log('Port Closed Successfully >>>')
+            setPortOpened(false)
+        }
+    }
+
+    return (
+        <>
+            <div className="flex gap-3 w-full items-center justify-center controlBtnGroup">
+                <button 
+                    onClick={connectSerial} 
+                    className="connect"
+                    style={{display: portOpened ? 'none' : 'block'}} >Connect <i className="fa-solid fa-plug-circle-bolt"></i></button>
+                <button 
+                    onClick={closeSerial} 
+                    className="connect" 
+                    style={{display: portOpened ? 'block' : 'none', marginLeft:'auto', transition:'0.5s ease', backgroundColor:'#9d1818'}}>Disconnect <i className="fa-solid fa-plug-circle-xmark" style={{color: "white"}}></i></button>
+                <button onClick={setOrigin} className='originBtn' data-command="G10 P0 L20 X0Y0Z0">Set Origin</button>
+            </div>
+        </>
+    )
+}
+
+
+function PlotterConfiguration({configuration, setConfiguration}) {
+    const handleInput = (event) => {
+        if (event.target.value) {
+            console.log('Old CONF :::', configuration)
+            const { name, value } = event.target;
+            setConfiguration(prevConfig => ({
+                ...prevConfig,
+                [name]: value
+            }));
+        }
+    }
+    
+    useEffect(() => {
+        console.log('New CONF :::', configuration);
+    }, [configuration]); // Add configuration as a dependency
+
+
+    return (
+        <>
+            <div className="flex controlInputGroup">
+                <div className="flex items-center justify-between">
+                    <label htmlFor="feedRate">feedRate</label>
+                    <input onInput={handleInput} type="number" max="9999" min="0" name='feedRate' maxLength="4" placeholder="1100" />
+                </div>
+                <div className="flex items-center justify-between">
+                    <label htmlFor="seekRate">seekRate</label>
+                    <input onInput={handleInput} type="number" max="9999" min="0" name='seekRate' maxLength="4" placeholder="1400" disabled/>
+                </div>
+                <div className="flex items-center justify-between">
+                    <label htmlFor="zOffset">zOffset</label>
+                    <input onInput={handleInput} type="number" max="9" name='zOffset' maxLength="1" placeholder="4" disabled/>
                 </div>
             </div>
         </>
@@ -78,6 +175,7 @@ function GcodeSection() {
         </>
     )
 }
+
 
 function DirectionButtons() {
     return (
