@@ -187,5 +187,7 @@ box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px
     border-bottom-left-radius: 1rem;
     border-bottom-right-radius: 1rem;
     transition: box-shadow 0.5s ease;
+    color: white;
+    padding: 1rem 1.5rem;
 }
 

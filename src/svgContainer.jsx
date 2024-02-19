@@ -2,9 +2,8 @@ import React, {useRef, useState} from "react";
 import { TransformWrapper,TransformComponent } from "react-zoom-pan-pinch";
 import './App.css';
 
-function SvgContainer() {
+function SvgContainer({svgContent, setSvgContent}) {
     const [isDraggingOver, setIsDraggingOver] = useState(false);
-    const [svgContent, setSvgContent] = useState(null)
     const [errorMsg, setErrorMsg] = useState('')
 
     const dropAreaRef = useRef(null)
@@ -47,6 +46,7 @@ function SvgContainer() {
         }, 3000);
       }
     };
+
     return (
         <>
         <div 

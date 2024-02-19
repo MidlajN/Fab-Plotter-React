@@ -5,8 +5,11 @@ import './App.css'
 import Controls from './Controls'
 import './index.css'
 import SvgContainer from './svgContainer'
-// 
+import { useState } from 'react';
+
+
 function App() {
+  const [svgContent, setSvgContent] = useState(null)
 
   return (
     <>
@@ -20,8 +23,13 @@ function App() {
 
       {/* ---------- Main Section ---------- */}
       <div className="flex items-center m-10 sm:flex-col md:flex-col lg:flex-row h-3/4 max-[646px]:flex-col">
-        <SvgContainer />
-        <Controls />
+        <SvgContainer
+          svgContent={svgContent}
+          setSvgContent={setSvgContent}
+        />
+        <Controls 
+          svgContent={svgContent}
+        />
       </div>
     </>
   )
