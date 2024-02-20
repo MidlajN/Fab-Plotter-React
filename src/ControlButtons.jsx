@@ -65,23 +65,30 @@ function SerialButtons({ port, setPort, reader, setReader, writer, setWriter, se
 
 
 
-function DirectionButtons() {
+function DirectionButtons({writer, reader, setResponse}) {
+    const handleCommand = async (event) => {
+        const command = event.currentTarget.dataset.command;
+        if (!writer) return
+        await writer.write(new TextEncoder().encode(`${command}\n`))
+        // const respons = await reader.read()
+        logSerialData(reader, setResponse)
+    }
     return (
         <>
             <div className="button-group">
-                <button className="direction-button up" id="dirUp" data-command="G0 Y5">
+                <button onClick={handleCommand} className="direction-button up" id="dirUp" data-command="G0 Y5">
                     <i className="fa-solid fa-circle-chevron-up"></i>
                 </button>
-                <button className="direction-button left" id="dirLeft" data-command="G0 X-5">
+                <button onClick={handleCommand} className="direction-button left" id="dirLeft" data-command="G0 X-5">
                     <i className="fa-solid fa-circle-chevron-left"></i>
                 </button>
-                <button className="center-button" data-command="M03 S123">
+                <button onClick={handleCommand} className="center-button" data-command="M03 S123">
                     <i className="fa-brands fa-centercode"></i>
                 </button>
-                <button className="direction-button right" id="dirRight" data-command="G0 X5">
+                <button onClick={handleCommand} className="direction-button right" id="dirRight" data-command="G0 X5">
                     <i className="fa-solid fa-circle-chevron-right"></i>
                 </button>
-                <button className="direction-button down" id="dirDown" data-command="G0 Y-5">
+                <button onClick={handleCommand} className="direction-button down" id="dirDown" data-command="G0 Y-5">
                     <i className="fa-solid fa-circle-chevron-down"></i>
                 </button>
             </div>

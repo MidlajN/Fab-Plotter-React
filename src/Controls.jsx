@@ -13,11 +13,37 @@ function Controls({svgContent}) {
 
     const generateGcode = () =>{
         const converter = new Converter(configuration)
-
-        converter.convert(svgContent).then((gcodes) => {
-            setGcode(gcodes[0])
-        })
+        if (svgContent) {
+            converter.convert(svgContent).then((gcodes) => {
+                setGcode(gcodes[0])
+            })
+        } else {
+            console.error('Please Choose an SVG first')
+        }
     }
+
+    const plotGcode = async () => {
+        let GcodeArray = [];
+        const gcodeLines = gcode.split('\n');
+
+        gcodeLines.forEach((line) => {
+            const trimmedLine = line.trim();
+
+            if (trimmedLine !== "") {
+                GcodeArray.push(trimmedLine)
+            }
+        })
+
+        for (const command of GcodeArray) {
+            console.log('Command ::', command);
+
+            await writer.write(new TextEncoder().encode(`${command}\n`))
+            // writer.releaseLock();
+
+            logSerialData(reader, setResponse)
+        }        
+    }
+
 
     return (
         <>
@@ -38,13 +64,21 @@ function Controls({svgContent}) {
                             />
 
                             <div className="flex justify-between items-center w-full">
-                                <button className="generateGcode" id="generateGcode" onClick={generateGcode}><i className="fa-solid fa-gears"></i> Generate G-Code</button>  
-                                <button className="plot" id="sendSerial">Send <i className="fa-solid fa-print fa-sm"></i></button>
+                                <button className="generateGcode" onClick={generateGcode}>
+                                    <i className="fa-solid fa-gears"></i> Generate G-Code
+                                </button>  
+                                <button className="plot" onClick={plotGcode}>
+                                    Send <i className="fa-solid fa-print fa-sm"></i>
+                                </button>
                             </div>
                         </div>
 
                         <div className="w-2/5">
-                            <DirectionButtons />
+                            <DirectionButtons
+                                writer={writer}
+                                reader={reader}
+                                setResponse={setResponse}  
+                            />
                         </div>
                     </div>
                 </div>
@@ -53,6 +87,7 @@ function Controls({svgContent}) {
                         response={response}
                         setResponse={setResponse}
                         gcodeData={gcode}
+                        setGcode={setGcode}
                     />
                 </div>
             </div>
@@ -98,14 +133,23 @@ function PlotterConfiguration({configuration, setConfiguration}) {
     )
 }
 
+
 async function logSerialData(reader, setResponse) {
     try {
         const readerResult = await reader.read();
-        // const receivedChunks = [];
-        // receivedChunks.push(new TextDecoder().decode(readerResult.value));
-        let recdata = new TextDecoder().decode(readerResult.value)
-        // const receivedData = receivedChunks.join('');
-        setResponse(prevData => prevData + recdata)
+        let responseData = new TextDecoder().decode(readerResult.value);
+
+        // Update response with the new data
+        setResponse(prevData => prevData + responseData);
+
+        // Check if reading process is done
+        if (readerResult.done) {
+            console.log('Reading process is completed.');
+        } else {
+            // Continue reading data recursively
+            logSerialData(reader, setResponse);
+        }
+
     } catch (error) {
         console.error('Error Fetching Data:', error);
     }
@@ -113,17 +157,21 @@ async function logSerialData(reader, setResponse) {
 
 
 function GcodeSection(props) {
-    const [text, setText] = useState('Baby Tell Me Why')
 
     const downloadGcode = () => {
+        // Create a Blob with the G-code data
         const gcodeFile = new Blob([props.gcodeData], { type : 'text/plain' })
+
+        // Create a link element to trigger the download
         const link = document.createElement('a');
         link.href = URL.createObjectURL(gcodeFile);
         link.download = 'G-Code-OutPut.gcode';
         link.click();
+
+        // Revoke the object URL to release resources
         URL.revokeObjectURL(link.href)
     }
-    
+
     return (
         <>
             <div className="flex gap-6 h-full">
@@ -131,9 +179,18 @@ function GcodeSection(props) {
                     <div className="textArea h-full">
                         <div className="flex justify-between items-center p-6 h-[10%]">
                             <h1>G - Code</h1>
-                            <button onClick={downloadGcode}><i className="fa-solid fa-download fa-lg" style={{color: '#3A5A99'}}></i></button>
+                            <button onClick={downloadGcode}>
+                                <i className="fa-solid fa-download fa-lg" style={{color: '#3A5A99'}}></i>
+                            </button>
                         </div>
-                        <textarea name="gcode" className='h-[90%]' id="gcode" value={props.gcodeData}></textarea>
+                        {/* Text area to display and edit G-code */}
+                        <textarea 
+                            name="gcode" 
+                            className='h-[90%]' 
+                            id="gcode" 
+                            value={props.gcodeData} 
+                            onChange={(e) => props.setGcode(e.target.value)} >
+                        </textarea>
                     </div>
                 </div>
                 <div className='w-full'>
@@ -141,7 +198,14 @@ function GcodeSection(props) {
                         <div className='flex items-center p-6 h-[10%]'>
                             <h1>Response</h1>
                         </div>
-                        <textarea name="responseArea" className='h-[90%] w-full' id="responseArea" disabled value={props.response}></textarea>
+                        {/* Text area to display response */}
+                        <textarea 
+                            name="responseArea" 
+                            className='h-[90%] w-full' 
+                            id="responseArea" 
+                            value={props.response}
+                            disabled>   
+                        </textarea>
                     </div>
                 </div>
             </div>
