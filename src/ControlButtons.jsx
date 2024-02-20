@@ -2,7 +2,6 @@ import React from "react";
 import { useState } from "react";
 import { logSerialData } from './Controls'
 
-
 function SerialButtons({ port, setPort, reader, setReader, writer, setWriter, setResponse }) {
     const [isToggled, setIsToggled] = useState(false)
     const [portOpened, setPortOpened] = useState(false)
@@ -62,7 +61,6 @@ function SerialButtons({ port, setPort, reader, setReader, writer, setWriter, se
         </>
     )
 }
-
 
 
 function DirectionButtons({writer, reader, setResponse}) {

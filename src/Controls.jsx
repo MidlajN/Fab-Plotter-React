@@ -38,12 +38,9 @@ function Controls({svgContent}) {
             console.log('Command ::', command);
 
             await writer.write(new TextEncoder().encode(`${command}\n`))
-            // writer.releaseLock();
-
             logSerialData(reader, setResponse)
         }        
     }
-
 
     return (
         <>
@@ -159,17 +156,21 @@ async function logSerialData(reader, setResponse) {
 function GcodeSection(props) {
 
     const downloadGcode = () => {
-        // Create a Blob with the G-code data
-        const gcodeFile = new Blob([props.gcodeData], { type : 'text/plain' })
+        if (props.gcode) {
+            // Create a Blob with the G-code data
+            const gcodeFile = new Blob([props.gcodeData], { type : 'text/plain' })
 
-        // Create a link element to trigger the download
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(gcodeFile);
-        link.download = 'G-Code-OutPut.gcode';
-        link.click();
+            // Create a link element to trigger the download
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(gcodeFile);
+            link.download = 'G-Code-OutPut.gcode';
+            link.click();
 
-        // Revoke the object URL to release resources
-        URL.revokeObjectURL(link.href)
+            // Revoke the object URL to release resources
+            URL.revokeObjectURL(link.href)
+        } else {
+            console.error('Please Choose An SVG')
+        }
     }
 
     return (
@@ -212,7 +213,6 @@ function GcodeSection(props) {
         </>
     )
 }
-
 
 
 export { logSerialData }
