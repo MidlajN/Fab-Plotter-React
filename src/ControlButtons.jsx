@@ -9,7 +9,7 @@ function SerialButtons({ port, setPort, reader, setReader, writer, setWriter, se
     const connectSerial = async () => {
         try {
             const newPort = await navigator.serial.requestPort();
-            await newPort.open({ baudRate : 9600 });
+            await newPort.open({ baudRate : 115200 });
             console.log('Port Opened Successfully');
             setPort(newPort);
             setWriter(newPort.writable.getWriter());
@@ -24,9 +24,9 @@ function SerialButtons({ port, setPort, reader, setReader, writer, setWriter, se
         try {
             if (!writer) return;
 
-            const dataToSend = isToggled ? '0' : '1';
-            setIsToggled(!isToggled)
-            // const dataToSend = 'G21\n'
+            // const dataToSend = isToggled ? '0' : '1';
+            // setIsToggled(!isToggled)
+            const dataToSend = 'G28\n'
             await writer.write(new TextEncoder().encode(dataToSend))
             logSerialData(reader, setResponse)
 
@@ -66,27 +66,36 @@ function SerialButtons({ port, setPort, reader, setReader, writer, setWriter, se
 function DirectionButtons({writer, reader, setResponse}) {
     const handleCommand = async (event) => {
         const command = event.currentTarget.dataset.command;
+        let currentTarget = event.currentTarget;
         if (!writer) return
         await writer.write(new TextEncoder().encode(`${command}\n`))
+
+        if (currentTarget) {
+            if (command === 'M03S123') {
+                currentTarget.setAttribute('data-command', 'M03S000')
+            } else if (command === 'M03S000') {
+                currentTarget.setAttribute('data-command', 'M03S123')
+            }
+        }
         // const respons = await reader.read()
         logSerialData(reader, setResponse)
     }
     return (
         <>
             <div className="button-group">
-                <button onClick={handleCommand} className="direction-button up" id="dirUp" data-command="G0 Y5">
+                <button onClick={handleCommand} className="direction-button up" id="dirUp" data-command="G01X0Y5">
                     <i className="fa-solid fa-circle-chevron-up"></i>
                 </button>
-                <button onClick={handleCommand} className="direction-button left" id="dirLeft" data-command="G0 X-5">
+                <button onClick={handleCommand} className="direction-button left" id="dirLeft" data-command="G01X-5">
                     <i className="fa-solid fa-circle-chevron-left"></i>
                 </button>
-                <button onClick={handleCommand} className="center-button" data-command="M03 S123">
+                <button onClick={handleCommand} className="center-button" data-command="M03S123">
                     <i className="fa-brands fa-centercode"></i>
                 </button>
-                <button onClick={handleCommand} className="direction-button right" id="dirRight" data-command="G0 X5">
+                <button onClick={handleCommand} className="direction-button right" id="dirRight" data-command="G01X5">
                     <i className="fa-solid fa-circle-chevron-right"></i>
                 </button>
-                <button onClick={handleCommand} className="direction-button down" id="dirDown" data-command="G0 Y-5">
+                <button onClick={handleCommand} className="direction-button down" id="dirDown" data-command="G01X0Y-5">
                     <i className="fa-solid fa-circle-chevron-down"></i>
                 </button>
             </div>
