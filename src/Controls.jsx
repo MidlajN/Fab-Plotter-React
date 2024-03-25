@@ -11,16 +11,25 @@ function Controls({svgContent}) {
     const [configuration, setConfiguration] = useState({ feedRate:1400, seekRate:1100, zOffset:4 })
     const [gcode, setGcode] = useState('')
 
-    const generateGcode = () =>{
-        const converter = new Converter(configuration)
+    const generateGcode = () => {
+        const converter = new Converter(configuration);
         if (svgContent) {
-            converter.convert(svgContent).then((gcodes) => {
-                setGcode(gcodes[0])
-            })
-        } else {
-            console.error('Please Choose an SVG first')
+            converter.convert(svgContent).then(gcode => {
+                const lines = gcode[0].split('\n');
+                const cleanedLines = lines.map(line => {
+                    const trimmedLine = line.trim();
+                    if (trimmedLine.includes('G0 Z4')) {
+                        return 'M03S000';
+                    } else if (trimmedLine.includes('G0 Z0')) {
+                        return 'M03S123';
+                    }
+                    return trimmedLine;
+                });
+                setGcode(cleanedLines.join('\n'));
+            });
         }
     }
+
 
     const plotGcode = async () => {
         let GcodeArray = [];
